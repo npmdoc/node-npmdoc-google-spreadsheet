@@ -61,12 +61,260 @@
 
     <li class="apidocModuleLi"><a href="#apidoc.module.google-spreadsheet">module google-spreadsheet</a><ol>
 
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.google-spreadsheet.google-spreadsheet">
+            function <span class="apidocSignatureSpan"></span>google-spreadsheet
+            <span class="apidocSignatureSpan">( ss_key, auth_id, options )</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.google-spreadsheet.toString">
+            function <span class="apidocSignatureSpan">google-spreadsheet.</span>toString
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.google-spreadsheet.toString">module google-spreadsheet.toString</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.google-spreadsheet.toString.toString">
+            function <span class="apidocSignatureSpan">google-spreadsheet.</span>toString
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
     </ol></li>
 
 </ol></div>
 
 <div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.google-spreadsheet" id="apidoc.module.google-spreadsheet">module google-spreadsheet</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.google-spreadsheet.google-spreadsheet" id="apidoc.element.google-spreadsheet.google-spreadsheet">
+        function <span class="apidocSignatureSpan"></span>google-spreadsheet
+        <span class="apidocSignatureSpan">( ss_key, auth_id, options )</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">google-spreadsheet = function ( ss_key, auth_id, options ){
+  var self = this;
+  var google_auth = null;
+  var visibility = &#x27;public&#x27;;
+  var projection = &#x27;values&#x27;;
+
+  var auth_mode = &#x27;anonymous&#x27;;
+
+  var auth_client = new GoogleAuth();
+  var jwt_client;
+
+  options = options || {};
+
+  var xml_parser = new xml2js.Parser({
+    // options carried over from older version of xml2js
+    // might want to update how the code works, but for now this is fine
+    explicitArray: false,
+    explicitRoot: false
+  });
+
+  if ( !ss_key ) {
+    throw new Error(&#x22;Spreadsheet key not provided.&#x22;);
+  }
+
+  // auth_id may be null
+  setAuthAndDependencies(auth_id);
+
+  // Authentication Methods
+
+  this.setAuthToken = function( auth_id ) {
+    if (auth_mode == &#x27;anonymous&#x27;) auth_mode = &#x27;token&#x27;;
+    setAuthAndDependencies(auth_id);
+  }
+
+  // deprecated username/password login method
+  // leaving it here to help notify users why it doesn&#x27;t work
+  this.setAuth = function( username, password, cb ){
+    return cb(new Error(&#x27;Google has officially deprecated ClientLogin. Please upgrade this module and see the readme for more instrucations
+&#x27;))
+  }
+
+  this.useServiceAccountAuth = function( creds, cb ){
+    if (typeof creds == &#x27;string&#x27;) {
+      try {
+        creds = require(creds);
+      } catch (err) {
+        return cb(err);
+      }
+    }
+    jwt_client = new auth_client.JWT(creds.client_email, null, creds.private_key, GOOGLE_AUTH_SCOPE, null);
+    renewJwtAuth(cb);
+  }
+
+  function renewJwtAuth(cb) {
+    auth_mode = &#x27;jwt&#x27;;
+    jwt_client.authorize(function (err, token) {
+      if (err) return cb(err);
+      self.setAuthToken({
+        type: token.token_type,
+        value: token.access_token,
+        expires: token.expiry_date
+      });
+      cb()
+    });
+  }
+
+  this.isAuthActive = function() {
+    return !!google_auth;
+  }
+
+
+  function setAuthAndDependencies( auth ) {
+    google_auth = auth;
+    if (!options.visibility){
+      visibility = google_auth ? &#x27;private&#x27; : &#x27;public&#x27;;
+    }
+    if (!options.projection){
+      projection = google_auth ? &#x27;full&#x27; : &#x27;values&#x27;;
+    }
+  }
+
+  // This method is used internally to make all requests
+  this.makeFeedRequest = function( url_params, method, query_or_data, cb ){
+    var url;
+    var headers = {};
+    if (!cb ) cb = function(){};
+    if ( typeof(url_params) == &#x27;string&#x27; ) {
+      // used for edit / delete requests
+      url = url_params;
+    } else if ( Array.isArray( url_params )){
+      //used for get and post requets
+      url_params.push( visibility, projection );
+      url = GOOGLE_FEED_URL + url_params.join(&#x22;/&#x22;);
+    }
+
+    async.series({
+      auth: function(step) {
+        if (auth_mode != &#x27;jwt&#x27;) return step();
+        // check if jwt token is expired
+        if (google_auth.expires &#x3e; +new Date()) return step();
+        renewJwtAuth(step);
+      },
+      request: function(result, step) {
+        if ( google_auth ) {
+          if (google_auth.type === &#x27;Bearer&#x27;) {
+            headers[&#x27;Authorization&#x27;] = &#x27;Bearer &#x27; + google_auth.value;
+          } else {
+            headers[&#x27;Authorization&#x27;] = &#x22;GoogleLogin auth=&#x22; + google_auth;
+          }
+        }
+
+        headers[&#x27;Gdata-Version&#x27;] = &#x27;3.0&#x27;;
+
+        if ( method == &#x27;POST&#x27; || method == &#x27;PUT&#x27; ) {
+          headers[&#x27;content-type&#x27;] = &#x27;application/atom+xml&#x27;;
+        }
+
+        if (method == &#x27;PUT&#x27; || method == &#x27;POST&#x27; &#x26;&#x26; url.indexOf(&#x27;/batch&#x27;) != -1) {
+          headers[&#x27;If-Match&#x27;] = &#x27;*&#x27;;
+        }
+
+        if ( method == &#x27;GET&#x27; &#x26;&#x26; query_or_data ) {
+          var query = &#x22;?&#x22; + querystring.stringify( query_or_data );
+          // replacements are needed for using structured queries on getRows
+          query = query.replace(/%3E/g,&#x27;&#x3e;&#x27;);
+          query = query.replace(/%3D/g,&#x27;=&#x27;);
+          query = query.replace(/%3C/g,&#x27;&#x3c;&#x27;);
+          url += query;
+        }
+
+        request( {
+          url: url,
+          method: method,
+          headers: headers,
+          body: method == &#x27;POST&#x27; || method == &#x27;PUT&#x27; ? query_or_data : null
+        }, function(err, response, body){
+          if (err) {
+            return cb( err );
+          } else if( response.statusCode === 401 ) {
+            return cb( new Error ...</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.google-spreadsheet.toString" id="apidoc.element.google-spreadsheet.toString">
+        function <span class="apidocSignatureSpan">google-spreadsheet.</span>toString
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">toString = function () {
+    return text;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  });
+  self.__defineSetter__(&#x27;value&#x27;, function(val){
+if (!val) return self._clearValue();
+
+var numeric_val = parseFloat(val);
+if (!isNaN(numeric_val)){
+  self._numericValue = numeric_val;
+  self._value = val.<span class="apidocCodeKeywordSpan">toString</span>();
+} else {
+  self._numericValue = undefined;
+  self._value = val;
+}
+
+if (typeof val == &#x27;string&#x27; &#x26;&#x26; val.substr(0,1) === &#x27;=&#x27;) {
+  // use the getter to clear the value
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.google-spreadsheet.toString" id="apidoc.module.google-spreadsheet.toString">module google-spreadsheet.toString</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.google-spreadsheet.toString.toString" id="apidoc.element.google-spreadsheet.toString.toString">
+        function <span class="apidocSignatureSpan">google-spreadsheet.</span>toString
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function toString() { [native code] }</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  });
+  self.__defineSetter__(&#x27;value&#x27;, function(val){
+if (!val) return self._clearValue();
+
+var numeric_val = parseFloat(val);
+if (!isNaN(numeric_val)){
+  self._numericValue = numeric_val;
+  self._value = val.<span class="apidocCodeKeywordSpan">toString</span>();
+} else {
+  self._numericValue = undefined;
+  self._value = val;
+}
+
+if (typeof val == &#x27;string&#x27; &#x26;&#x26; val.substr(0,1) === &#x27;=&#x27;) {
+  // use the getter to clear the value
+...</pre></li>
+    </ul>
+
 
 </div>
 

@@ -1,4 +1,4 @@
-<div class="apidocDiv">
+<html><head></head><body><div class="apidocDiv">
 <style>
 /*csslint
 */
@@ -47,17 +47,10 @@
 }
 </style>
 <h1>api documentation for
-    <a
-
-        href="https://github.com/theoephraim/node-google-spreadsheet"
-
-    >google-spreadsheet (v2.0.3)</a>
+    <a href="https://github.com/theoephraim/node-google-spreadsheet">google-spreadsheet (v2.0.3)</a>
 </h1>
 <h4>Google Spreadsheets Data API -- simple interface to read/write rows/cells, manage sheets</h4>
-<div class="apidocSectionDiv"><a
-    href="#apidoc.tableOfContents"
-    id="apidoc.tableOfContents"
-><h1>table of contents</h1></a><ol>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
 
     <li class="apidocModuleLi"><a href="#apidoc.module.google-spreadsheet">module google-spreadsheet</a><ol>
 
@@ -110,10 +103,10 @@
     <li>description and source-code<pre class="apidocCodePre">google-spreadsheet = function ( ss_key, auth_id, options ){
   var self = this;
   var google_auth = null;
-  var visibility = &#x27;public&#x27;;
-  var projection = &#x27;values&#x27;;
+  var visibility = 'public';
+  var projection = 'values';
 
-  var auth_mode = &#x27;anonymous&#x27;;
+  var auth_mode = 'anonymous';
 
   var auth_client = new GoogleAuth();
   var jwt_client;
@@ -128,7 +121,7 @@
   });
 
   if ( !ss_key ) {
-    throw new Error(&#x22;Spreadsheet key not provided.&#x22;);
+    throw new Error("Spreadsheet key not provided.");
   }
 
   // auth_id may be null
@@ -137,19 +130,19 @@
   // Authentication Methods
 
   this.setAuthToken = function( auth_id ) {
-    if (auth_mode == &#x27;anonymous&#x27;) auth_mode = &#x27;token&#x27;;
+    if (auth_mode == 'anonymous') auth_mode = 'token';
     setAuthAndDependencies(auth_id);
   }
 
   // deprecated username/password login method
-  // leaving it here to help notify users why it doesn&#x27;t work
+  // leaving it here to help notify users why it doesn't work
   this.setAuth = function( username, password, cb ){
-    return cb(new Error(&#x27;Google has officially deprecated ClientLogin. Please upgrade this module and see the readme for more instrucations
-&#x27;))
+    return cb(new Error('Google has officially deprecated ClientLogin. Please upgrade this module and see the readme for more instrucations
+'))
   }
 
   this.useServiceAccountAuth = function( creds, cb ){
-    if (typeof creds == &#x27;string&#x27;) {
+    if (typeof creds == 'string') {
       try {
         creds = require(creds);
       } catch (err) {
@@ -161,7 +154,7 @@
   }
 
   function renewJwtAuth(cb) {
-    auth_mode = &#x27;jwt&#x27;;
+    auth_mode = 'jwt';
     jwt_client.authorize(function (err, token) {
       if (err) return cb(err);
       self.setAuthToken({
@@ -181,10 +174,10 @@
   function setAuthAndDependencies( auth ) {
     google_auth = auth;
     if (!options.visibility){
-      visibility = google_auth ? &#x27;private&#x27; : &#x27;public&#x27;;
+      visibility = google_auth ? 'private' : 'public';
     }
     if (!options.projection){
-      projection = google_auth ? &#x27;full&#x27; : &#x27;values&#x27;;
+      projection = google_auth ? 'full' : 'values';
     }
   }
 
@@ -193,47 +186,47 @@
     var url;
     var headers = {};
     if (!cb ) cb = function(){};
-    if ( typeof(url_params) == &#x27;string&#x27; ) {
+    if ( typeof(url_params) == 'string' ) {
       // used for edit / delete requests
       url = url_params;
     } else if ( Array.isArray( url_params )){
       //used for get and post requets
       url_params.push( visibility, projection );
-      url = GOOGLE_FEED_URL + url_params.join(&#x22;/&#x22;);
+      url = GOOGLE_FEED_URL + url_params.join("/");
     }
 
     async.series({
       auth: function(step) {
-        if (auth_mode != &#x27;jwt&#x27;) return step();
+        if (auth_mode != 'jwt') return step();
         // check if jwt token is expired
-        if (google_auth.expires &#x3e; +new Date()) return step();
+        if (google_auth.expires &gt; +new Date()) return step();
         renewJwtAuth(step);
       },
       request: function(result, step) {
         if ( google_auth ) {
-          if (google_auth.type === &#x27;Bearer&#x27;) {
-            headers[&#x27;Authorization&#x27;] = &#x27;Bearer &#x27; + google_auth.value;
+          if (google_auth.type === 'Bearer') {
+            headers['Authorization'] = 'Bearer ' + google_auth.value;
           } else {
-            headers[&#x27;Authorization&#x27;] = &#x22;GoogleLogin auth=&#x22; + google_auth;
+            headers['Authorization'] = "GoogleLogin auth=" + google_auth;
           }
         }
 
-        headers[&#x27;Gdata-Version&#x27;] = &#x27;3.0&#x27;;
+        headers['Gdata-Version'] = '3.0';
 
-        if ( method == &#x27;POST&#x27; || method == &#x27;PUT&#x27; ) {
-          headers[&#x27;content-type&#x27;] = &#x27;application/atom+xml&#x27;;
+        if ( method == 'POST' || method == 'PUT' ) {
+          headers['content-type'] = 'application/atom+xml';
         }
 
-        if (method == &#x27;PUT&#x27; || method == &#x27;POST&#x27; &#x26;&#x26; url.indexOf(&#x27;/batch&#x27;) != -1) {
-          headers[&#x27;If-Match&#x27;] = &#x27;*&#x27;;
+        if (method == 'PUT' || method == 'POST' &amp;&amp; url.indexOf('/batch') != -1) {
+          headers['If-Match'] = '*';
         }
 
-        if ( method == &#x27;GET&#x27; &#x26;&#x26; query_or_data ) {
-          var query = &#x22;?&#x22; + querystring.stringify( query_or_data );
+        if ( method == 'GET' &amp;&amp; query_or_data ) {
+          var query = "?" + querystring.stringify( query_or_data );
           // replacements are needed for using structured queries on getRows
-          query = query.replace(/%3E/g,&#x27;&#x3e;&#x27;);
-          query = query.replace(/%3D/g,&#x27;=&#x27;);
-          query = query.replace(/%3C/g,&#x27;&#x3c;&#x27;);
+          query = query.replace(/%3E/g,'&gt;');
+          query = query.replace(/%3D/g,'=');
+          query = query.replace(/%3C/g,'&lt;');
           url += query;
         }
 
@@ -241,7 +234,7 @@
           url: url,
           method: method,
           headers: headers,
-          body: method == &#x27;POST&#x27; || method == &#x27;PUT&#x27; ? query_or_data : null
+          body: method == 'POST' || method == 'PUT' ? query_or_data : null
         }, function(err, response, body){
           if (err) {
             return cb( err );
@@ -264,7 +257,7 @@
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
   });
-  self.__defineSetter__(&#x27;value&#x27;, function(val){
+  self.__defineSetter__('value', function(val){
 if (!val) return self._clearValue();
 
 var numeric_val = parseFloat(val);
@@ -276,7 +269,7 @@ if (!isNaN(numeric_val)){
   self._value = val;
 }
 
-if (typeof val == &#x27;string&#x27; &#x26;&#x26; val.substr(0,1) === &#x27;=&#x27;) {
+if (typeof val == 'string' &amp;&amp; val.substr(0,1) === '=') {
   // use the getter to clear the value
 ...</pre></li>
     </ul>
@@ -298,7 +291,7 @@ if (typeof val == &#x27;string&#x27; &#x26;&#x26; val.substr(0,1) === &#x27;=&#x
     <li>description and source-code<pre class="apidocCodePre">function toString() { [native code] }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
   });
-  self.__defineSetter__(&#x27;value&#x27;, function(val){
+  self.__defineSetter__('value', function(val){
 if (!val) return self._clearValue();
 
 var numeric_val = parseFloat(val);
@@ -310,7 +303,7 @@ if (!isNaN(numeric_val)){
   self._value = val;
 }
 
-if (typeof val == &#x27;string&#x27; &#x26;&#x26; val.substr(0,1) === &#x27;=&#x27;) {
+if (typeof val == 'string' &amp;&amp; val.substr(0,1) === '=') {
   // use the getter to clear the value
 ...</pre></li>
     </ul>
@@ -324,3 +317,4 @@ if (typeof val == &#x27;string&#x27; &#x26;&#x26; val.substr(0,1) === &#x27;=&#x
     ]
 </div>
 </div>
+</body></html>
