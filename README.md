@@ -1,9 +1,11 @@
 # api documentation for  [google-spreadsheet (v2.0.3)](https://github.com/theoephraim/node-google-spreadsheet)  [![npm package](https://img.shields.io/npm/v/npmdoc-google-spreadsheet.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-google-spreadsheet) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-google-spreadsheet.svg)](https://travis-ci.org/npmdoc/node-npmdoc-google-spreadsheet)
 #### Google Spreadsheets Data API -- simple interface to read/write rows/cells, manage sheets
 
-[![NPM](https://nodei.co/npm/google-spreadsheet.png?downloads=true)](https://www.npmjs.com/package/google-spreadsheet)
+[![NPM](https://nodei.co/npm/google-spreadsheet.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/google-spreadsheet)
 
-[![apidoc](https://npmdoc.github.io/node-npmdoc-google-spreadsheet/build/screenCapture.buildApidoc.browser.%252Fhome%252Ftravis%252Fbuild%252Fnpmdoc%252Fnode-npmdoc-google-spreadsheet%252Ftmp%252Fbuild%252Fapidoc.html.png)](https://npmdoc.github.io/node-npmdoc-google-spreadsheet/build/apidoc.html)
+- [https://npmdoc.github.io/node-npmdoc-google-spreadsheet/build/apidoc.html](https://npmdoc.github.io/node-npmdoc-google-spreadsheet/build/apidoc.html)
+
+[![apidoc](https://npmdoc.github.io/node-npmdoc-google-spreadsheet/build/screenCapture.buildCi.browser.%252Ftmp%252Fbuild%252Fapidoc.html.png)](https://npmdoc.github.io/node-npmdoc-google-spreadsheet/build/apidoc.html)
 
 ![npmPackageListing](https://npmdoc.github.io/node-npmdoc-google-spreadsheet/build/screenCapture.npmPackageListing.svg)
 
@@ -18,7 +20,6 @@
 {
     "author": {
         "name": "Theo Ephraim",
-        "email": "theozero@gmail.com",
         "url": "http://theoephraim.com"
     },
     "bugs": {
@@ -60,13 +61,11 @@
     "main": "index.js",
     "maintainers": [
         {
-            "name": "theozero",
-            "email": "theozero@gmail.com"
+            "name": "theozero"
         }
     ],
     "name": "google-spreadsheet",
     "optionalDependencies": {},
-    "readme": "ERROR: No README data found!",
     "repository": {
         "type": "git",
         "url": "git://github.com/theoephraim/node-google-spreadsheet.git"
@@ -77,16 +76,6 @@
     "version": "2.0.3"
 }
 ```
-
-
-
-# <a name="apidoc.tableOfContents"></a>[table of contents](#apidoc.tableOfContents)
-
-#### [module google-spreadsheet](#apidoc.module.google-spreadsheet)
-
-
-
-# <a name="apidoc.module.google-spreadsheet"></a>[module google-spreadsheet](#apidoc.module.google-spreadsheet)
 
 
 
