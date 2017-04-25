@@ -70,28 +70,6 @@
 
         </li>
 
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.google-spreadsheet.toString">
-            function <span class="apidocSignatureSpan">google-spreadsheet.</span>toString
-            <span class="apidocSignatureSpan">()</span>
-            </a>
-
-        </li>
-
-    </ol></li>
-
-    <li class="apidocModuleLi"><a href="#apidoc.module.google-spreadsheet.toString">module google-spreadsheet.toString</a><ol>
-
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.google-spreadsheet.toString.toString">
-            function <span class="apidocSignatureSpan">google-spreadsheet.</span>toString
-            <span class="apidocSignatureSpan">()</span>
-            </a>
-
-        </li>
-
     </ol></li>
 
 </ol></div>
@@ -248,71 +226,6 @@
           } else if( response.statusCode === 401 ) {
             return cb( new Error ...</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
-    </ul>
-
-
-
-    <h2>
-        <a href="#apidoc.element.google-spreadsheet.toString" id="apidoc.element.google-spreadsheet.toString">
-        function <span class="apidocSignatureSpan">google-spreadsheet.</span>toString
-        <span class="apidocSignatureSpan">()</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">toString = function () {
-    return text;
-}</pre></li>
-    <li>example usage<pre class="apidocCodePre">...
-  });
-  self.__defineSetter__(&#x27;value&#x27;, function(val){
-if (!val) return self._clearValue();
-
-var numeric_val = parseFloat(val);
-if (!isNaN(numeric_val)){
-  self._numericValue = numeric_val;
-  self._value = val.<span class="apidocCodeKeywordSpan">toString</span>();
-} else {
-  self._numericValue = undefined;
-  self._value = val;
-}
-
-if (typeof val == &#x27;string&#x27; &#x26;&#x26; val.substr(0,1) === &#x27;=&#x27;) {
-  // use the getter to clear the value
-...</pre></li>
-    </ul>
-
-
-</div>
-
-<div class="apidocSectionDiv">
-<h1><a href="#apidoc.module.google-spreadsheet.toString" id="apidoc.module.google-spreadsheet.toString">module google-spreadsheet.toString</a></h1>
-
-
-    <h2>
-        <a href="#apidoc.element.google-spreadsheet.toString.toString" id="apidoc.element.google-spreadsheet.toString.toString">
-        function <span class="apidocSignatureSpan">google-spreadsheet.</span>toString
-        <span class="apidocSignatureSpan">()</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">function toString() { [native code] }</pre></li>
-    <li>example usage<pre class="apidocCodePre">...
-  });
-  self.__defineSetter__(&#x27;value&#x27;, function(val){
-if (!val) return self._clearValue();
-
-var numeric_val = parseFloat(val);
-if (!isNaN(numeric_val)){
-  self._numericValue = numeric_val;
-  self._value = val.<span class="apidocCodeKeywordSpan">toString</span>();
-} else {
-  self._numericValue = undefined;
-  self._value = val;
-}
-
-if (typeof val == &#x27;string&#x27; &#x26;&#x26; val.substr(0,1) === &#x27;=&#x27;) {
-  // use the getter to clear the value
-...</pre></li>
     </ul>
 
 
