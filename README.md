@@ -1,4 +1,7 @@
-# api documentation for  [google-spreadsheet (v2.0.3)](https://github.com/theoephraim/node-google-spreadsheet)  [![npm package](https://img.shields.io/npm/v/npmdoc-google-spreadsheet.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-google-spreadsheet) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-google-spreadsheet.svg)](https://travis-ci.org/npmdoc/node-npmdoc-google-spreadsheet)
+# npmdoc-google-spreadsheet
+
+#### basic api documentation for  [google-spreadsheet (v2.0.3)](https://github.com/theoephraim/node-google-spreadsheet)  [![npm package](https://img.shields.io/npm/v/npmdoc-google-spreadsheet.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-google-spreadsheet) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-google-spreadsheet.svg)](https://travis-ci.org/npmdoc/node-npmdoc-google-spreadsheet)
+
 #### Google Spreadsheets Data API -- simple interface to read/write rows/cells, manage sheets
 
 [![NPM](https://nodei.co/npm/google-spreadsheet.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/google-spreadsheet)
@@ -73,7 +76,8 @@
     "scripts": {
         "test": "mocha"
     },
-    "version": "2.0.3"
+    "version": "2.0.3",
+    "bin": {}
 }
 ```
 
